@@ -3,7 +3,8 @@ import sys
 
 inputs = sys.argv[1:]
 watermark_file = 'wtr.pdf'
-output = 'superfile.pdf'
+output = 'super.pdf'
+merged = 'wtr-super.pdf'
 
 def pdf_combiner(pdf_list):
     #merge pages in the file
@@ -16,38 +17,30 @@ def pdf_combiner(pdf_list):
     merger.write(output)
 
 
-def watermarker(combined_file, watermark_file):
-    with open(combined_file, 'rb') as filehandle_input:
+def watermarker(combined_file, watermarker):
+    with open(combined_file, 'rb') as input_file, open(watermarker, 'rb') as watermark_file:
         #read content of the combined file
-        pdf2 = PyPDF2.PdfFileReader(filehandle_input)
+        input_pdf = PyPDF2.PdfFileReader(input_file)     
+        #read content of the watermark
+        watermark_pdf = PyPDF2.PdfFileReader(watermark_file)
+        #get first page of the watermark PDF
+        watermark_page = watermark_pdf.getPage(0)
+        #create a pdf writer object for the output file
+        pdf_writer = PyPDF2.PdfFileWriter()
 
-        with open(watermark_file, 'rb') as filehandle_watermark:
-            #read content of the watermark
-            watermark = PyPDF2.PdfFileReader(filehandle_watermark)
+        for i in range(input_pdf.getNumPages()):
+            #get pages of the combined file
+            combined_pages = input_pdf.getPage(i)
 
-            for page in combined_file:
+            #merge the two pages
+            combined_pages.mergePage(watermark_page)
 
-                #get pages of the combined file
-                combined_pages = pdf2.getPage(page)
+            #add page
+            pdf_writer.addPage(combined_pages)
 
-                #get first page of the watermark PDF
-                first_page_watermark = watermark.getPage(0)
-
-                #merge the two pages
-                combined_pages.mergePage(first_page_watermark)
-
-                #create a pdf writer object for the output file
-                pdf_writer = PyPDF2.PdfFileWriter()
-
-                #add page
-                pdf_writer.addPage(combined_pages)
-
-                with open('watermarked-super.pdf', 'wb') as filehandle_output:
-                    #write the watermarked file to the new file 
-                    pdf_writer.write(filehandle_output)
-
-
-        
+            with open(merged, 'wb') as merged_file:
+                #write the watermarked file to the new file 
+                pdf_writer.write(merged_file)
 
 
 pdf_combiner(inputs)
