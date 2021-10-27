@@ -7,13 +7,11 @@ output = 'super.pdf'
 merged = 'watermarked-output.pdf'
 
 def pdf_combiner(pdf_list):
-    #merge pages in the file
-    merger = PyPDF2.PdfFileMerger()
+    merger = PyPDF2.PdfFileMerger() #merge pages in the file
     for pdf in pdf_list:
-        #add pages
-        merger.append(pdf)
+        merger.append(pdf) #add pages
     #creates a new document
-    merger.write(output)
+    merger.write(output) #created new documents
 
 
 def watermarker(combined_file, watermarker):
@@ -23,7 +21,7 @@ def watermarker(combined_file, watermarker):
         #read content of the watermark
         watermark_pdf = PyPDF2.PdfFileReader(watermark_file)        
         #create a pdf writer object for the output file
-        output = PyPDF2.PdfFileWriter()
+        output_file = PyPDF2.PdfFileWriter()
 
         for i in range(input_pdf.getNumPages()):
             #get pages of the combined file
@@ -33,13 +31,13 @@ def watermarker(combined_file, watermarker):
             combined_pages.mergePage(watermark_pdf.getPage(0))
 
             #add page
-            output.addPage(combined_pages)
+            output_file.addPage(combined_pages)
             print(combined_pages)
-            print(output)
+            print(output_file)
 
             with open(merged, 'wb') as merged_file:
                 #write the watermarked file to the new file 
-                output.write(merged_file)
+                output_file.write(merged_file)
 
 
 pdf_combiner(inputs)
