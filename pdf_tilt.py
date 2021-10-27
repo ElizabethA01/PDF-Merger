@@ -2,7 +2,8 @@
 import PyPDF2
 
 with open('dummy.pdf', 'rb') as file: # 'rb' reads the file in binary mode
-    reader = PyPDF2.PdfFileReader(file) #another way of reading the file using PyPDF2 module
+    #another way of reading the file using PyPDF2 module
+    reader = PyPDF2.PdfFileReader(file) 
     # print(reader.numPages) #tells you number of pages
 
     #How to rotate PDFs to a new file:
