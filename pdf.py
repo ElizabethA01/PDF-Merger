@@ -4,7 +4,7 @@ import sys
 inputs = sys.argv[1:]
 watermark_file = 'wtr.pdf'
 output = 'super.pdf'
-merged = 'watermakred-output.pdf'
+merged = 'watermarked-output.pdf'
 
 def pdf_combiner(pdf_list):
     #merge pages in the file
@@ -29,14 +29,13 @@ def watermarker(combined_file, watermarker):
             #get pages of the combined file
             combined_pages = input_pdf.getPage(i)
 
-            #get first page of the watermark PDF
-            watermark_page = watermark_pdf.getPage(0)
-
             #merge the two pages
-            combined_pages.mergePage(watermark_page)
+            combined_pages.mergePage(watermark_pdf.getPage(0))
 
             #add page
             output.addPage(combined_pages)
+            print(combined_pages)
+            print(output)
 
             with open(merged, 'wb') as merged_file:
                 #write the watermarked file to the new file 
